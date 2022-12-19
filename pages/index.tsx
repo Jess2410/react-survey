@@ -6,13 +6,26 @@ import artist from "../public/assets/tony.jpg";
 import { data } from "../data";
 import { Stars } from "../public/components/Stars";
 import ReactPlayer from "react-player/youtube";
+import { useState } from "react";
 // import Image
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { projects } = data;
-  console.log("🚀 ~ file: index.tsx:12 ~ Home ~ projects", projects);
+  // const [allRatings, setallRatings] = useState();
+  const allRatings: number[] = new Array(projects.length).fill(0);
+
+  const handleRating = (index: number, rate: number) => {
+    console.log("index " + index);
+    console.log("rate " + rate);
+
+    allRatings[index] = rate;
+  };
+
+  const onSubmit = () => {
+    console.log(allRatings);
+  };
 
   return (
     <>
@@ -59,32 +72,35 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <form>
-          <ul>
-            {projects.map((projet, key) => {
-              return (
-                <li key={key}>
-                  <div
-                    style={{
-                      border: "violet 1px solid",
-                      borderRadius: "50px",
-                      objectFit: "contain",
-                      padding: "20px",
-                    }}
-                  >
-                    <ReactPlayer url={projet.href} width={450} light={true} />
-                    <div className="title">
-                      {projet.name} <Stars />
-                    </div>
+        <ul>
+          {projects.map((projet, key) => {
+            return (
+              <li key={key}>
+                <div
+                  style={{
+                    border: "violet 1px solid",
+                    borderRadius: "50px",
+                    objectFit: "contain",
+                    padding: "20px",
+                  }}
+                >
+                  <ReactPlayer url={projet.href} width={450} light={true} />
+                  <div className="title">
+                    {projet.name}{" "}
+                    <Stars
+                      handleRating={handleRating}
+                      rating={allRatings[key]}
+                      index={key}
+                    />
                   </div>
-                </li>
-              );
-            })}
-          </ul>
-          <div className="btnWrapper">
-            <button type="submit">VOTER</button>
-          </div>
-        </form>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="btnWrapper">
+          <button onClick={onSubmit}>VOTER</button>
+        </div>
       </main>
     </>
   );
